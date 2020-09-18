@@ -10,6 +10,8 @@ The referenceNof1 R package is used to construct robust reference standards for 
 
 # Install
 
+To install the referenceNof1 R package, we invite you to install the latest/experimental release on GitHub, via the commands below, as well as the stable release on CRAN. 
+
 ## Github
 install_github("samirrachidzaim/referenceNof1")
 
