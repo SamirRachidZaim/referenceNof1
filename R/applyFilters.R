@@ -1,23 +1,13 @@
-#' random forest feature selection based on binomial exact test
+#' Constructing robust reference standards for Nof1 studies for precision medicine
 #'
 #' \code{referenceNof1} is the R implementation of the reference biomarker algorithm by (Zaim 2020)
 #'
-#' @usage binomialRF(X,y, fdr.threshold = .05,fdr.method = 'BY',
-#'                       ntrees = 2000, percent_features = .5,
-#'                       keep.both=FALSE, user_cbinom_dist=NULL,
-#'                       sampsize=round(nrow(X)*.63))
+#' @usage applyFilter(30, c(1, 1.5), )
 #'
-#' @param expressionCutoff a scalar indicating the minimum count value of RNA-seq
+#' @param expressionCutoff a scalar positive integer > 1 indicating the minimum count value of RNA-seq
 #' @param fold_change_window a tuple indicating the fold change range to search
-#' @param gs.mat fdr.threshold for determining which set of features are significant
-#' @param fdr.method how should we adjust for multiple comparisons (i.e., \code{p.adjust.methods} =c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr", "none"))
-#' @param ntrees how many trees should be used to grow the \code{randomForest}?
-#' @param percent_features what percentage of L do we subsample at each tree? Should be a proportion between (0,1)
-#' @param keep.both should we keep the naive binomialRF as well as the correlated adjustment
-#' @param user_cbinom_dist insert either a pre-specified correlated binomial distribution or calculate one via the R package \code{correlbinom}.
-#' @param sampsize how many samples should be included in each tree in the randomForest
-#'
-#' @references Zaim, SZ; Kenost, C.; Lussier, YA; Zhang, HH. binomialRF: Scalable Feature Selection and Screening for Random Forests to Identify Biomarkers and Their Interactions, bioRxiv, 2019.
+#' @param gs.mat the matrix used to develop the reference standard
+#' @param fdr.method fdr.threshold for determining which set of genes are DEGs in the reference standard
 #'
 
 
