@@ -1,11 +1,12 @@
 Package: referenceNof1
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Develops robust Nof1 reference standards for single-subject studies in precision medicine
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: person("Samir", "Rachid Zaim", email = "samirrachidzaim@math.arizona.edu", role = c("aut", "cre"))
+Description: The referenceNof1 is an R package to further enable precision medicine in single-subject studies. 
+    Given the disagreements that may occur in methods of differential gene expression, we propose a new algorithm, *referenceNof1*, to systematically identify regions in the transcriptome that maximize concordance across techniques to maximize biological signal and minimize statisitcal noise. These tools are developed in single-subject paired design studies, that use fold change and expression-level filters to conduct a grid search to identify the optimal parameters for constructing an optimal reference standard. 
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
