@@ -1,12 +1,15 @@
 Package: referenceNof1
 Type: Package
-Title: Develops robust Nof1 reference standards for single-subject studies in precision medicine
+Title: ‘Develops Robust Nof1 Reference Standards for Single-Subject Studies in Precision Medicine’
 Version: 0.1.0
-Authors@R: person("Samir", "Rachid Zaim", email = "samirrachidzaim@math.arizona.edu", role = c("aut", "cre"))
+Author: Samir Rachid Zaim, PhD(c) Univ of Arizona
+Maintainer: Samir Rachid Zaim <samirrachidzaim@math.arizona.edu>
 Description: The referenceNof1 is an R package to further enable precision medicine in single-subject studies. 
     Given the disagreements that may occur in methods of differential gene expression, we propose a new algorithm, *referenceNof1*, to systematically identify regions in the transcriptome that maximize concordance across techniques to maximize biological signal and minimize statisitcal noise. These tools are developed in single-subject paired design studies, that use fold change and expression-level filters to conduct a grid search to identify the optimal parameters for constructing an optimal reference standard. 
 License: GPL-2
 Encoding: UTF-8
+Imports:  knitr, DEGseq, DESeq, DESeq2, NOISeq, data.table, dplyr, edgeR, ggplot2, robustbase, locfit
+Suggests: doParallel
 LazyData: true
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

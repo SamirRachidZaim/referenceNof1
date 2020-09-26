@@ -1,0 +1,26 @@
+#' MCF7 Breast Cancer cell line
+#'
+#' MCF7 Breast Cancer cell line experiment that examines expression profiling by high throughput sequencing to determine whether
+#' more sequence, or more replication is required to obtain more accurate results for differential gene expresion.
+#'
+#' Experimental design: Treatment (10nM E2 treatment for 24h) and control MCF7 cells are both replicated 7 times,
+#' and collected for mRNA-seq. Reads are then subsampled for statistical analysis.
+#'
+#' @docType data
+#'
+#' @usage data(mcf7)
+#'
+#' @format An object of class \code{"data.farme"};
+#'
+#' @keywords datasets
+#'
+#' @references Liu Y, Zhou J, White KP. RNA-seq differential expression studies: more sequence or more replication? Bioinformatics 2014 Feb 1;30(3):301-4. PMID: 24319002
+#' (\href{https://www.ncbi.nlm.nih.gov/pubmed/23979570}{PubMed})
+#'
+#' @source \href{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51403}{NCBI Repository}
+#'
+#' @examples
+#' data(mcf7)
+#' colMeans(mcf7)
+#' summary(mcf7)
+"mcf7"

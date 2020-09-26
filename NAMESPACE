@@ -1,1 +1,4 @@
-exportPattern("^[[:alpha:]]+")
+exportPattern("^[[:alpha:]]+|^[^\\.]")
+importFrom("stats", "p.adjust")
+importFrom("utils", "sessionInfo")
+importFrom('locfit','locfit')

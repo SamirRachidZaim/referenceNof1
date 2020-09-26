@@ -2,16 +2,23 @@
 #'
 #' \code{referenceNof1} is the R implementation of the reference biomarker algorithm by (Zaim 2020)
 #'
-#' @usage applyFilter(30, c(1, 1.5), )
+#' @usage applyFilter(gs.mat = utils::data("mcf7"), expressionCutoff =30,
+#'                    fold_change_window=c(1, 1.5), FDR.cutoff=0.1)
 #'
+#' @param gs.mat a matrix of paired samples used to develop the reference standard.
+#'               All paired samples must be adjacent
 #' @param expressionCutoff a scalar positive integer > 1 indicating the minimum count value of RNA-seq
 #' @param fold_change_window a tuple indicating the fold change range to search
-#' @param gs.mat the matrix used to develop the reference standard
-#' @param fdr.method fdr.threshold for determining which set of genes are DEGs in the reference standard
+#' @param FDR.cutoff fdr.threshold for determining which set of genes are DEGs in the reference standard
 #'
+#' @export
 
 
-applyFilter <- function(expressionCutoff, fold_change_window, gs.mat,FDR.cutoff=0.1){
+applyFilter <- function(gs.mat=utils::data("mcf7"), expressionCutoff=30, fold_change_window=c(1,1.5),FDR.cutoff=0.1){
+
+  ### re-arrange
+  ncols= ncol(gs.mat)
+  gs.mat <- gs.mat[, c(seq(1, ncols,2),seq(2,ncols,2))]
 
   idx.cutoff <- which(rowMeans(gs.mat) > expressionCutoff)
 
@@ -25,21 +32,21 @@ applyFilter <- function(expressionCutoff, fold_change_window, gs.mat,FDR.cutoff=
 
   calculateFCperPair <- function(pair.mat){
 
-    fc.mat <- data.table(FC = fc(pair.mat),
+    fc.mat <- data.table::data.table(FC = fc(pair.mat),
                          LogFC=log_fc(pair.mat))
     return(fc.mat)
   }
 
   ncols = ncol(gs.mat)
 
-  fc.mat <- do.call(cbind,lapply(1:(ncols/2), function(x) calculateFCperPair(gs.mat[c(x,x+30)])))
+  fc.mat <- do.call(cbind,lapply(1:(ncols/2), function(x) calculateFCperPair(gs.mat[c(x,x+(ncols/2))])))
   fold_change.mat <- fc.mat[,seq(from = 1, to=ncols, by=2), with=F]
   log_fold_change.mat <- fc.mat[,seq(from = 2, to=ncols, by=2), with=F]
 
   fc.mean <- rowMeans(fold_change.mat)
   logfc.mean <- rowMeans(log_fold_change.mat)
 
-  idx_between <- which(between(abs(fc.mean), left = fold_change_window[1], right = fold_change_window[2]))
+  idx_between <- which(dplyr::between(abs(fc.mean), left = fold_change_window[1], right = fold_change_window[2]))
 
   #### Filter FCs < 1.5 (i.e., effect size )
   #### before calculating ref standard degs
@@ -53,8 +60,8 @@ applyFilter <- function(expressionCutoff, fold_change_window, gs.mat,FDR.cutoff=
   ############ ############ ############ ############ ############
 
   ## edgeR as Gold standard
-  DEG_gs.edgeR <- DEG_edgeR(countTable = gs.mat,
-                            conditions =  c(rep('normal',30), rep('tumor',30)),
+  DEG_gs.edgeR <- .DEG_edgeR(countTable = gs.mat,
+                            conditions =  c(rep('normal',(ncols/2)), rep('tumor',(ncols/2))),
                             replicateType = 'genetically identical model organisms',
                             disper = .1)
 
@@ -63,28 +70,28 @@ applyFilter <- function(expressionCutoff, fold_change_window, gs.mat,FDR.cutoff=
 
 
   ## DESeq as Gold Standard
-  gs.cohort.conditions =   c(rep('normal',30), rep('tumor',30))
+  gs.cohort.conditions =   c(rep('normal',(ncols/2)), rep('tumor',(ncols/2)))
 
-  DESeq.preds  <- DEG_DESeq.cb(gs.mat, conditions =gs.cohort.conditions )
+  DESeq.preds  <- .DEG_DESeq.cb(gs.mat, conditions =gs.cohort.conditions )
   DESeq.preds <- DESeq.preds$padj
   DESeq.preds[which(is.na(DESeq.preds))] <- 1
   y_true.deseq <- DESeq.preds < FDR.cutoff
 
 
   ## DESeq2 as Gold Standard
-  gs.cohort.conditions =   c(rep('normal',30), rep('tumor',30))
+  gs.cohort.conditions =   c(rep('normal',(ncols/2)), rep('tumor',(ncols/2)))
 
-  DESeq2.preds  <- DEG_DESeq2.cb(gs.mat, conditions =gs.cohort.conditions )
+  DESeq2.preds  <- .DEG_DESeq2.cb(gs.mat, conditions =gs.cohort.conditions )
   DESeq2.preds <- DESeq2.preds$padj
   DESeq2.preds[which(is.na(DESeq2.preds))] <- 1
 
   y_true.deseq2 <- DESeq2.preds < FDR.cutoff
 
   ## DEGseq as Gold Standard
-  gs.cohort.conditions =   c(rep('normal',30), rep('tumor',30))
+  gs.cohort.conditions =   c(rep('normal',(ncols/2)), rep('tumor',(ncols/2)))
 
   ## DEGseq
-  DEGseq.preds <- DEG_DEGseq.cb(gs.mat[,1:30],gs.mat[,31:60], FDR_threshold= .1)
+  DEGseq.preds <- .DEG_DEGseq.cb(gs.mat[,1:(ncols/2)],gs.mat[,((ncols/2)+1):ncols], FDR_threshold= .1)
   DEGseq.preds <- DEGseq.preds[order(DEGseq.preds$GeneNames),]
   DEGseq.preds <- DEGseq.preds[,'q.value.Benjamini.et.al..1995.']
   DEGseq.preds[which(is.na(DEGseq.preds))] <- 1
@@ -93,10 +100,10 @@ applyFilter <- function(expressionCutoff, fold_change_window, gs.mat,FDR.cutoff=
   #### NOISeq  goldstandard
   # countTable = ts.mat
   ## DESeq as Gold Standard
-  gs.cohort.conditions =   c(rep('normal',30), rep('tumor',30))
+  gs.cohort.conditions =   c(rep('normal',(ncols/2)), rep('tumor',(ncols/2)))
 
   ## NOISeq
-  NOISeq.cb.preds <- DEG_noiseq.cb(gs.mat, conditions =gs.cohort.conditions)
+  NOISeq.cb.preds <- .DEG_noiseq.cb(gs.mat, conditions =gs.cohort.conditions)
   NOISeq.preds <- NOISeq.cb.preds$prob
   NOISeq.preds <-  p.adjust(1-NOISeq.preds, 'BY') #(transform to p-values)
   NOISeq.preds[which(is.na(NOISeq.preds))] <- 1
@@ -111,7 +118,7 @@ applyFilter <- function(expressionCutoff, fold_change_window, gs.mat,FDR.cutoff=
   y_true.intersection <- y_true.union <- logical(length(y_true.edgeR))
 
   y_true.intersection[Reduce(intersect, list(idx.nsq.idx, idx.edg.idx,idx.desq.idx,idx.desq2.idx,idx.degsq))] <- T
-  y_true.union[Reduce(union.Vector, list(idx.nsq.idx, idx.edg.idx,idx.desq.idx,idx.desq2.idx,idx.degsq))] <- T
+  y_true.union[Reduce(union, list(idx.nsq.idx, idx.edg.idx,idx.desq.idx,idx.desq2.idx,idx.degsq))] <- T
 
 
   lnint <- function(a,b){
@@ -181,7 +188,7 @@ applyFilter <- function(expressionCutoff, fold_change_window, gs.mat,FDR.cutoff=
   jac.matrix <- as.matrix(jac.matrix)
 
   return(list(JaccardMatrix = jac.matrix,
-              Medians = colMedians(jac.matrix))
+              Medians = robustbase::colMedians(jac.matrix))
   )
 
 }
