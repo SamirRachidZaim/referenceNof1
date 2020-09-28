@@ -16,8 +16,9 @@ The *referenceNof1* R package uses the following methods to create a concordance
 
 - DEGseq
 
-The concordance matrix is built using the Jaccard Index (JI) which is given by the following formula: 
- $$JI = \frac{|A\cap B|}{|A \cup B|}$$
+The concordance matrix is built using the Jaccard Index (JI) which is
+given by the following formula: JI = |Intersection(A, B)| /
+|Union(A,B)| where |.| denotes the size or cardinality of a set, and A,B are sets of differentially expressed genes.
 
 ## Data
 The data provided in this R package is a subset of the MCF7 data (access: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51403), from the following manuscript: 
