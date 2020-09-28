@@ -16,6 +16,8 @@
 
 optimize_parameters <- function(gs.mat=utils::data("mcf7"), expressionCutoffs= c(30,50), FCRegions=list(c(0,0.3)), FDR.cutoff=0.1){
 
+  options()
+  requireNamespace('locfit')
   params = expand.grid(expressionCutoffs, FCRegions)
   colnames(params) <- c("Expression Cutoff", 'Fold Change Window')
 
@@ -33,12 +35,10 @@ optimize_parameters <- function(gs.mat=utils::data("mcf7"), expressionCutoffs= c
  optimal.score <- medianOfMedians[idx.max]
  optimal.param$MedianAgreement <- optimal.score
 
-
- cat('\n\nThe best Jaccard index concordances were attained using \n\n')
+ cat('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe best Jaccard index concordances were attained using')
  cat(paste('an expression level cutoff of ', optimal.param[1]))
- cat('\n\n')
  cat(paste('and a fold-change window of ', optimal.param[2]))
- cat(paste('attaining a median JI concordance across all methods of', round(optimal.score,2)))
+ cat(paste(' attaining a median JI concordance across all methods of', round(optimal.score,2)))
  cat('\n\n')
  return(optimal.param)
 }

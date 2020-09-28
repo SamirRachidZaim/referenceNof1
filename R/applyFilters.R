@@ -16,6 +16,7 @@
 
 applyFilter <- function(gs.mat=utils::data("mcf7"), expressionCutoff=30, fold_change_window=c(1,1.5),FDR.cutoff=0.1){
 
+  
   ### re-arrange
   ncols= ncol(gs.mat)
   gs.mat <- gs.mat[, c(seq(1, ncols,2),seq(2,ncols,2))]
@@ -26,6 +27,10 @@ applyFilter <- function(gs.mat=utils::data("mcf7"), expressionCutoff=30, fold_ch
   #### before calculating ref standard degs
 
   gs.mat <- gs.mat[idx.cutoff, ]
+  
+  if(nrow(gs.mat)<50){
+    stop("Error: less than 50 observations in selected cutoff")
+  }
 
   #### Filter FCs < 1.5 (i.e., effect size )
   #### before calculating ref standard degs

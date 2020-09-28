@@ -1,0 +1,56 @@
+---
+title: "referenceNof1 Vignette"
+author: "Samir Rachid Zaim"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Sending Messages With Gmailr}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# referenceNof1
+
+The *referenceNof1* R package is designed to create robust reference standards using Jaccard Indices to calculate agreement and identify regions in which agreement is maximized among techniques for differential gene expression. 
+
+## Methods
+
+The *referenceNof1* R package uses the following methods to create a concordance matrix to evaluate whether the parameter filters are good or not: 
+
+- DeSeq
+
+- DESeq2
+
+- edgeR
+
+- NOISEq
+
+- DEGseq
+
+The concordance matrix is built using the Jaccard Index (JI) which is given by the following formula: 
+ $$JI = \frac{|A\cap B|}{|A \cup B|}$$
+
+## Data
+The data provided in this R package is a subset of the MCF7 data (access: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51403), from the following manuscript: 
+
+Liu Y, Zhou J, White KP. RNA-seq differential expression studies: more sequence or more replication? Bioinformatics 2014 Feb 1;30(3):301-4. PMID: 24319002
+
+
+## Usage
+
+```{r echo=T, message=FALSE, warning=FALSE}
+require(locfit)
+mcf7 = referenceNof1::mcf7
+res <- referenceNof1::applyFilter(mcf7, expressionCutoff = 30, fold_change_window = c(0,.3), 1)
+jaccard_matrix <- res$JaccardMatrix
+
+```
+
+
+```{r echo=T, message=FALSE, warning=FALSE,message=FALSE}
+referenceNof1::concordance_heatmap(jaccard_matrix = jaccard_matrix)
+```

@@ -12,18 +12,25 @@
 concordance_heatmap <- function(jaccard_matrix){
   mat <- jaccard_matrix
   mat2 <- data.frame(data.table::melt(mat))
+  mat2$JaccardIndex = arules::discretize(mat2$value, method = 'fixed', 
+                                 breaks = c(  0,0.5, 0.75, .9, 1))
+  
+  JaccardIndex <- mat2$JaccardIndex
+  
+  p <- ggplot2::ggplot(mat2, ggplot2::aes(mat2[,'Var1'], mat2[,'Var2'])) + 
+    ggplot2::geom_raster(ggplot2::aes( fill=JaccardIndex)) 
 
-  p <- ggplot2::ggplot(mat2, ggplot2::aes(x=mat2[,'Var1'], y=mat2[,'Var1'])) + ggplot2::geom_tile(ggplot2::aes(fill = mat2[,'value']), colour = "white") +
-    ggplot2::scale_fill_gradient(low = "white", high = "black", guide='legend', breaks=c(.5,.6,.7,.8,.9,1)) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1,size = ggplot2::rel(2)),
-          axis.text.y = ggplot2::element_text(angle = 0, hjust = 1,size = ggplot2::rel(2)),
-          title = ggplot2::element_text(angle = 0, hjust = 1,size = ggplot2::rel(1.5))) +
+  
+  p <- p + ggplot2::theme_dark() + ggplot2::theme(
+    axis.text.y = ggplot2::element_text(angle = 0, hjust = 1,size = ggplot2::rel(2)),
+    title = ggplot2::element_text(angle = 0, hjust = 1,size = ggplot2::rel(1.5))) +
     ggplot2::ggtitle("Agreement After Expression Filter") + ggplot2::theme_light()+
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1,size = ggplot2::rel(2)),
-          axis.text.y = ggplot2::element_text(angle = 0, hjust = 1,size = ggplot2::rel(2)),
-          title = ggplot2::element_text(angle = 0, hjust = .5,size = ggplot2::rel(1.5))) +
+                   axis.text.y = ggplot2::element_text(angle = 0, hjust = 1,size = ggplot2::rel(2)),
+                   title = ggplot2::element_text(angle = 0, hjust = .5,size = ggplot2::rel(1.5))) +
     ggplot2::xlab('')+
-    ggplot2::ylab('')
+    ggplot2::ylab('') +    ggplot2::scale_fill_manual(values = c("grey", "yellow", "blue", "green"))
+  
 
 
   print(p)
