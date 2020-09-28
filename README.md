@@ -1,29 +1,5 @@
 # referenceNof1
 
-The referenceNof1 R package is used to construct robust reference standards for Nof1 studies to identify active or "altered" genes, for precision medicine. This package provides functions to identify the optimal parameters for constructing a robust reference standards using 
- - DESeq
- - edgeR
- - NOISeq
- - DESeq2
- - DEGseq
-
----
-title: "referenceNof1 Vignette"
-author: "Samir Rachid Zaim"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_document
-vignette: >
-  %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{Sending Messages With Gmailr}
-  %\usepackage[utf8]{inputenc}
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-# referenceNof1
-
 The *referenceNof1* R package is designed to create robust reference standards using Jaccard Indices to calculate agreement and identify regions in which agreement is maximized among techniques for differential gene expression. 
 
 ## Methods
