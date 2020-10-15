@@ -28,8 +28,8 @@ applyFilter <- function(gs.mat=utils::data("mcf7"), expressionCutoff=30, fold_ch
 
   gs.mat <- gs.mat[idx.cutoff, ]
   
-  if(nrow(gs.mat)<50){
-    stop("Error: less than 50 observations in selected cutoff")
+  if(nrow(gs.mat)<100){
+    stop("Error: less than 100 observations in selected cutoff")
   }
 
   #### Filter FCs < 1.5 (i.e., effect size )
@@ -134,16 +134,11 @@ applyFilter <- function(gs.mat=utils::data("mcf7"), expressionCutoff=30, fold_ch
     sapply(b.list, function(x) lnint(a, x))
   }
 
-  jaccard <- function(a,b){
-    num = length(intersect(a,b))
-    denom= length(union(a,b))
-    return(num/denom)
-  }
+
 
   jaccard_pairwise <- function(a, b.list){
-    sapply(b.list, function(x) jaccard(a, x))
+    sapply(b.list, function(x) jaccard_similarity(a, x))
   }
-
 
   nsq = lnint_pairwise(idx.nsq.idx, list(idx.nsq.idx, idx.edg.idx,idx.desq.idx,idx.desq2.idx,idx.degsq))
   edg = lnint_pairwise(idx.edg.idx, list( idx.edg.idx,idx.desq.idx,idx.desq2.idx,idx.degsq))
