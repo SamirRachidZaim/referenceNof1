@@ -10,5 +10,5 @@
 
 
 log_fc <- function(pair.mat){
-  log2(pair.mat[,2]-pair.mat[,1]+1)/log2(pair.mat[,1]+1)
+  log2(pair.mat[,2]+1)/log2(pair.mat[,1]+1)
 }
