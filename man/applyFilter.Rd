@@ -13,7 +13,7 @@ All paired samples must be adjacent}
 
 \item{expressionCutoff}{a scalar positive integer > 1 indicating the minimum count value of RNA-seq}
 
-\item{fold_change_window}{a tuple indicating the fold change range to search}
+\item{FCCutoff}{a scalar indicating minimum fold change cutoff}
 
 \item{FDR.cutoff}{fdr.threshold for determining which set of genes are DEGs in the reference standard}
 }

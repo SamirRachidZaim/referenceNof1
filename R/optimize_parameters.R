@@ -9,30 +9,39 @@
 #'
 #' @param gs.mat the matrix used to develop the reference standard
 #' @param expressionCutoffs a vector of positive integer > 1 indicating the minimum count value of RNA-seq
-#' @param FCRegions a tlist of tuples indicating the fold change region to search
+#' @param FCCutoff a list of upper bounds for minimal fold change thresholds
 #' @param FDR.cutoff fdr.threshold for determining which set of genes are DEGs in the reference standard
+#' @param targetJI target jaccard index 
 #'
 #' @export
 
-optimize_parameters <- function(gs.mat=utils::data("mcf7"), expressionCutoffs= c(30,50), FCRegions=list(c(0,0.3)), FDR.cutoff=0.1){
+optimize_parameters <- function(gs.mat=utils::data("mcf7"), expressionCutoffs= c(30,50), FCCutoff=c(1,1.3,1.5), FDR.cutoff=0.1, targetJI=0.6){
 
-  options()
+  FCRegions = lapply(FCCutoff, function(x) c(x, Inf))
+  
   requireNamespace('locfit')
   params = expand.grid(expressionCutoffs, FCRegions)
   colnames(params) <- c("Expression Cutoff", 'Fold Change Window')
+  
+  i=1
+  currentJI=0
+  while(currentJI < targetJI ){
+    
+    curr_search = applyFilter(gs.mat=gs.mat,
+               expressionCutoff =  params[i,1],
+               fold_change_window=unlist(params[i,2]),
+               FDR.cutoff =FDR.cutoff)    
+    
+    currentJI = median(curr_search$Medians)
+    i=i+1
+  }
 
-  search_space <- lapply(1:nrow(params),
-                     function(x) applyFilter(gs.mat=gs.mat,
-                                             expressionCutoff =  params[x,1],
-                                             fold_change_window=unlist(params[x,2]),
-                                             FDR.cutoff =FDR.cutoff))
+  optimal.idx = i-1
 
+  curr_search
 
- medianOfMedians <- sapply(search_space, function(x) stats::median(x$Medians) )
- idx.max <- which.max(medianOfMedians)
-
- optimal.param <- params[idx.max,]
- optimal.score <- medianOfMedians[idx.max]
+ optimal.param <- params[optimal.idx,]
+ optimal.score <- round(currentJI,2)
  optimal.param$MedianAgreement <- optimal.score
 
  cat('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe best Jaccard index concordances were attained using')

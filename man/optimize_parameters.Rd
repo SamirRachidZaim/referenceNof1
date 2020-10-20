@@ -14,9 +14,11 @@ optimize_parameters(gs.mat=utils::data("mcf7"),
 
 \item{expressionCutoffs}{a vector of positive integer > 1 indicating the minimum count value of RNA-seq}
 
-\item{FCRegions}{a tlist of tuples indicating the fold change region to search}
+\item{FCCutoff}{a list of upper bounds for minimal fold change thresholds}
 
 \item{FDR.cutoff}{fdr.threshold for determining which set of genes are DEGs in the reference standard}
+
+\item{targetJI}{target jaccard index}
 }
 \description{
 \code{referenceNof1} is the R implementation of the reference biomarker algorithm by (Zaim 2020)

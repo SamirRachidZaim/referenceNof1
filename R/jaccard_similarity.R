@@ -10,7 +10,7 @@
 #' @return a scalar indicating the jaccard similarity
 
 
-jaccard <- function(a,b){
+jaccard_similarity <- function(a,b){
   num = length(intersect(a,b))
   denom= length(union(a,b))
   return(num/denom)

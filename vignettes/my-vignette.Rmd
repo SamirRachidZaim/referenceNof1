@@ -61,7 +61,7 @@ res <- referenceNof1::applyFilter(mcf7, expressionCutoff = 30, fold_change_windo
 ```{r echo=T, include=FALSE}
 require(locfit)
 mcf7 = referenceNof1::mcf7
-res <- referenceNof1::applyFilter(mcf7, expressionCutoff = 30, fold_change_window = c(0,.3), 1)
+res <- referenceNof1::applyFilter(mcf7, expressionCutoff = 30, FCCutoff  = 1, .01)
 
 ```
 
@@ -95,9 +95,8 @@ To identify the region of optimal performance, the referenceNof1 R package has a
 referenceNof1::optimize_parameters(gs.mat = mcf7, expressionCutoffs = c(0,30), FCRegions = list(c(0, 0.1)),FDR.cutoff = 0.1)
 ```
 
-```{r echo=F, include=FALSE}
-mcf7 = referenceNof1::mcf7
-referenceNof1::optimize_parameters(gs.mat = mcf7, expressionCutoffs = c(30,50), FCRegions = list(c(0, 0.4)),FDR.cutoff = 0.1)
+```{r echo=F}
+#referenceNof1::optimize_parameters(gs.mat = mcf7, expressionCutoffs = c(0,30), FCCutoff = c(1, 1.5),FDR.cutoff = 0.1, targetJI = 0.6)
 ```
 
 where referenceNof1 will construct reference standards using a cutoff of 0 (i.e., no cutoff) and 30, and use those two thresholds to determine which one provides better concordance across techniques. 

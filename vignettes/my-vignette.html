@@ -11,7 +11,7 @@
 
 <meta name="author" content="Samir Rachid Zaim" />
 
-<meta name="date" content="2020-09-28" />
+<meta name="date" content="2020-10-16" />
 
 <title>referenceNof1 Vignette</title>
 
@@ -365,7 +365,7 @@ summary {
 
 <h1 class="title toc-ignore">referenceNof1 Vignette</h1>
 <h4 class="author">Samir Rachid Zaim</h4>
-<h4 class="date">2020-09-28</h4>
+<h4 class="date">2020-10-16</h4>
 
 </div>
 
@@ -415,6 +415,7 @@ res &lt;- referenceNof1::applyFilter(mcf7, expressionCutoff = 30, fold_change_wi
 <h2>Identifying Optimal Reference Standard</h2>
 <p>To identify the region of optimal performance, the referenceNof1 R package has a function tha conducts a grid-search on user-selected parameters. For example, if a bioinformatician wants to determine the best cutoff threshold for lowly-expressed genes, a grid-search like below:</p>
 <pre><code>referenceNof1::optimize_parameters(gs.mat = mcf7, expressionCutoffs = c(0,30), FCRegions = list(c(0, 0.1)),FDR.cutoff = 0.1)</code></pre>
+<p>where referenceNof1 will construct reference standards using a cutoff of 0 (i.e., no cutoff) and 30, and use those two thresholds to determine which one provides better concordance across techniques.</p>
 </div>
 </div>
 

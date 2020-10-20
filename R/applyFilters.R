@@ -8,14 +8,16 @@
 #' @param gs.mat a matrix of paired samples used to develop the reference standard.
 #'               All paired samples must be adjacent
 #' @param expressionCutoff a scalar positive integer > 1 indicating the minimum count value of RNA-seq
-#' @param fold_change_window a tuple indicating the fold change range to search
+#' @param FCCutoff a scalar indicating minimum fold change cutoff
 #' @param FDR.cutoff fdr.threshold for determining which set of genes are DEGs in the reference standard
 #'
 #' @export
 
 
-applyFilter <- function(gs.mat=utils::data("mcf7"), expressionCutoff=30, fold_change_window=c(1,1.5),FDR.cutoff=0.1){
+applyFilter <- function(gs.mat=utils::data("mcf7"), expressionCutoff=30, FCCutoff=1, FDR.cutoff=0.1){
 
+  
+  FCRegions = c(FCCutoff, Inf)
   
   ### re-arrange
   ncols= ncol(gs.mat)
@@ -45,13 +47,16 @@ applyFilter <- function(gs.mat=utils::data("mcf7"), expressionCutoff=30, fold_ch
   ncols = ncol(gs.mat)
 
   fc.mat <- do.call(cbind,lapply(1:(ncols/2), function(x) calculateFCperPair(gs.mat[c(x,x+(ncols/2))])))
-  fold_change.mat <- fc.mat[,seq(from = 1, to=ncols, by=2), with=F]
-  log_fold_change.mat <- fc.mat[,seq(from = 2, to=ncols, by=2), with=F]
-
+  fold_change.mat <- as.matrix(fc.mat[,seq(from = 1, to=8, by=2), with=F])
+  log_fold_change.mat <- fc.mat[,seq(from = 2, to=8, by=2), with=F]
+  
+  idx  =which(fold_change.mat<1 & fold_change.mat > 0)
+  fold_change.mat[idx] = 1/fold_change.mat[idx]
+  
   fc.mean <- rowMeans(fold_change.mat)
   logfc.mean <- rowMeans(log_fold_change.mat)
 
-  idx_between <- which(dplyr::between(abs(fc.mean), left = fold_change_window[1], right = fold_change_window[2]))
+  idx_between <- which(dplyr::between(abs(fc.mean), left = FCRegions[1], right = FCRegions[2]))
 
   #### Filter FCs < 1.5 (i.e., effect size )
   #### before calculating ref standard degs
